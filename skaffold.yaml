@@ -1,0 +1,15 @@
+apiVersion: skaffold/v1beta15
+kind: Config
+metadata:
+  name: powertrip-day
+build:
+  artifacts:
+    - image: smpte11/powertrip-day
+      context: .
+      jib: {}
+
+deploy:
+  kubectl:
+    manifests:
+    - manifest/day-deployment.yaml
+    - manifest/day-service.yaml
