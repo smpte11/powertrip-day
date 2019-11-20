@@ -1,0 +1,6 @@
+{
+  "cloudcode.profile-cluster-map": {
+    "[default]": "minikube",
+    "minikube": "minikube"
+  }
+}

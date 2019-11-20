@@ -3,13 +3,18 @@ kind: Config
 metadata:
   name: powertrip-day
 build:
+  tagPolicy:
+    sha256: {}
   artifacts:
-    - image: smpte11/powertrip-day
+    - image: powertrip-day
       context: .
       jib: {}
 
 deploy:
-  kubectl:
-    manifests:
-    - manifest/day-deployment.yaml
-    - manifest/day-service.yaml
+  helm:
+    releases:
+      - name: powertrip-day
+        chartPath: powertrip-day
+        values:
+          image: powertrip-day
+        imageStrategy: {}
