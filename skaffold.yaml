@@ -9,7 +9,6 @@ build:
     - image: powertrip-day
       context: .
       jib: {}
-
 deploy:
   helm:
     releases:
@@ -18,3 +17,11 @@ deploy:
         values:
           image: powertrip-day
         imageStrategy: {}
+profiles:
+  - build:
+      local:
+        push: false
+        useBuildkit: false
+        useDockerCLI: false
+    deploy: {}
+    name: powertrip-day

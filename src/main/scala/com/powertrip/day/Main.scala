@@ -1,4 +1,4 @@
-package com.powertrip.powertripday
+package com.powertrip.day
 
 import cats.effect._
 import cats.implicits._

@@ -1,6 +1,7 @@
 {
   "cloudcode.profile-cluster-map": {
     "[default]": "minikube",
-    "minikube": "minikube"
+    "minikube": "minikube",
+    "powertrip-day": "minikube"
   }
 }
