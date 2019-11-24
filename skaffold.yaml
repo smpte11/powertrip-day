@@ -11,17 +11,12 @@ build:
       jib: {}
 deploy:
   helm:
+    flags:
+      upgrade:
+        - "--install"
     releases:
       - name: powertrip-day
         chartPath: powertrip-day
         values:
           image: powertrip-day
         imageStrategy: {}
-profiles:
-  - build:
-      local:
-        push: false
-        useBuildkit: false
-        useDockerCLI: false
-    deploy: {}
-    name: powertrip-day
