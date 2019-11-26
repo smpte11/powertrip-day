@@ -1,9 +1,10 @@
-val scalaVersion = "2.12.10"
-val http4sVersion = "0.20.8"
+val scalaVersion = "2.13.1"
+val http4sVersion = "0.21.0-M5"
 val rhoVersion = "0.20.0-M1"
 val circeVersion = "0.12.3"
-val specs2Version = "4.8.0"
+val scalatestVersion = "3.1.0-RC3"
 val logbackVersion = "1.2.3"
+val cirisVersion = "1.0.2"
 
 
 plugins {
@@ -22,7 +23,6 @@ tasks.withType<ScalaCompile> {
             "-language:higherKinds",
             "-language:postfixOps",
             "-feature",
-            "-Ypartial-unification",
             "-Xfatal-warnings"
     )
 }
@@ -30,21 +30,25 @@ tasks.withType<ScalaCompile> {
 dependencies {
     implementation("org.scala-lang:scala-library:$scalaVersion")
 
-    implementation("io.circe:circe-generic_2.12:$circeVersion")
+    implementation("is.cir:ciris_2.13:$cirisVersion")
+    implementation("is.cir:ciris-enumeratum_2.13:$cirisVersion")
+    implementation("is.cir:ciris-refined_2.13:$cirisVersion")
 
-    implementation("org.http4s:http4s-dsl_2.12:$http4sVersion")
-    implementation("org.http4s:http4s-blaze-server_2.12:$http4sVersion")
-    implementation("org.http4s:http4s-blaze-client_2.12:$http4sVersion")
-    implementation("org.http4s:http4s-circe_2.12:$http4sVersion")
+    implementation("io.circe:circe-generic_2.13:$circeVersion")
 
-    implementation("org.http4s:rho-core_2.12:$rhoVersion")
-    implementation("org.http4s:rho-hal_2.12:$rhoVersion")
+    implementation("org.http4s:http4s-dsl_2.13:$http4sVersion")
+    implementation("org.http4s:http4s-blaze-server_2.13:$http4sVersion")
+    implementation("org.http4s:http4s-blaze-client_2.13:$http4sVersion")
+    implementation("org.http4s:http4s-circe_2.13:$http4sVersion")
+
+    implementation("org.http4s:rho-core_2.13:$rhoVersion")
+    implementation("org.http4s:rho-hal_2.13:$rhoVersion")
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
 
-    implementation("org.typelevel:kind-projector_2.12.10:0.11.0")
-    implementation("com.olegpy:better-monadic-for_2.12:0.3.1")
+    testImplementation("org.scalatest:scalatest_2.13:$scalatestVersion")
+    testImplementation("org.scalactic:scalactic_2.13:$scalatestVersion")
 
-    testImplementation("org.specs2:specs2-core_2.12:$specs2Version")
-
+    implementation("org.typelevel:kind-projector_2.13.1:0.11.0")
+    implementation("com.olegpy:better-monadic-for_2.13.0-RC3:0.3.0")
 }
