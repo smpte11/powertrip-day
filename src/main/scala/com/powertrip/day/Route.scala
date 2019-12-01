@@ -2,13 +2,12 @@ package com.powertrip.day
 
 import java.time.LocalDateTime
 
-import cats.data.NonEmptyList
+import cats.data.NonEmptyChain
 import cats.effect._
-import com.powertrip.day.Day._
 import org.http4s.dsl.Http4sDsl
 import org.http4s.rho.RhoRoutes
 
-class Routes[F[_]: Sync] extends Http4sDsl[F] {
+class Route[F[_]: Sync] extends Http4sDsl[F] {
   // TODO move `api` and `version` to config
   val api = "api"
   val version = "v1"
@@ -16,7 +15,8 @@ class Routes[F[_]: Sync] extends Http4sDsl[F] {
 
   val routes: RhoRoutes[F] = new RhoRoutes[F] {
     GET / api / version / resource / pathVar[Int] |>> { _: Int =>
-      val day = Day(LocalDateTime.now(), NonEmptyList.of(1))
+      val activities = NonEmptyChain(2, 2, 3)
+      val day = Day(date = LocalDateTime.now(), activities = activities)
       Ok(day)
     }
   }

@@ -26,7 +26,7 @@ object Main extends IOApp {
 
   def stream[F[_]: ConcurrentEffect: Applicative: ContextShift: Timer]: Stream[F, ExitCode] = for {
     configuration <- Stream.eval(config.load[F])
-    httpApp = new Routes[F].routes.toRoutes().orNotFound
+    httpApp = new Route[F].routes.toRoutes().orNotFound
     enhanced = Logger.httpApp(logHeaders = true, logBody = true)(httpApp)
     exitCode <- BlazeServerBuilder[F]
         .bindHttp(port = configuration.port, host = "0.0.0.0")
