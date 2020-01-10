@@ -9,7 +9,7 @@ build:
         buildCommand: ./scripts/build.sh
         dependencies:
           paths:
-            - .
+            - src
 deploy:
   helm:
     flags:
