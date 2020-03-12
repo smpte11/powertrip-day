@@ -1,13 +1,13 @@
-val http4sVersion = "0.20.15"
-val rhoVersion = "0.20.0-M1"
+val http4sVersion = "0.21.1"
+val rhoVersion = "0.20.0"
 val circeVersion = "0.12.3"
-val scalatestVersion = "3.1.0-RC3"
+val scalatestVersion = "3.1.1"
 val logbackVersion = "1.2.3"
-val cirisVersion = "1.0.2"
+val cirisVersion = "1.0.4"
 
 lazy val root = (project in file("."))
   .settings(
-    scalaVersion := "2.12.10",
+    scalaVersion := "2.13.1",
     name := "powertrip-day",
     organization := "com.powertrip",
     version := "0.0.1-SNAPSHOT",
@@ -41,7 +41,6 @@ scalacOptions ++= Seq(
   "-language:higherKinds",
   "-language:postfixOps",
   "-feature",
-  "-Ypartial-unification",
   "-Xfatal-warnings"
 )
 
