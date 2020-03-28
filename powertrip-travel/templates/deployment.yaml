@@ -3,20 +3,20 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   labels:
-    app: {{ template "powertrip-day.name" . }}
+    app: {{ template "powertrip-travel.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   selector:
     matchLabels:
-      app: {{ template "powertrip-day.name" . }}
+      app: {{ template "powertrip-travel.name" . }}
       release: {{ .Release.Name }}
   replicas: {{ .Values.replicaCount }}
   template:
     metadata:
       labels:
-        app: {{ template "powertrip-day.name" . }}
+        app: {{ template "powertrip-travel.name" . }}
         release: {{ .Release.Name }}
     spec:
       containers:

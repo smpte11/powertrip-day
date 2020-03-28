@@ -8,7 +8,7 @@ val cirisVersion = "1.0.4"
 lazy val root = (project in file("."))
   .settings(
     scalaVersion := "2.13.1",
-    name := "powertrip-day",
+    name := "powertrip-travel",
     organization := "com.powertrip",
     version := "0.0.1-SNAPSHOT",
     libraryDependencies ++= Seq(
@@ -47,4 +47,4 @@ scalacOptions ++= Seq(
 enablePlugins(JavaAppPackaging)
 enablePlugins(DockerPlugin)
 
-mainClass in Compile := Some("com.powertrip.day.Main")
+mainClass in Compile := Some("com.powertrip.travel.Main")

@@ -10,7 +10,7 @@ import io.circe.generic.semiauto._
 import org.http4s.EntityEncoder
 import org.http4s.circe.jsonEncoderOf
 
-package object day {
+package object travel {
   // Refined primitive types
   type Lat = Float Refined Interval.Closed[W.`-90.0f`.T, W.`90.0f`.T]
   type Long = Float Refined Interval.Closed[W.`-180.0f`.T, W.`180.0f`.T]

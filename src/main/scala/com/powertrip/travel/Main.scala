@@ -1,4 +1,4 @@
-package com.powertrip.day
+package com.powertrip.travel
 
 import cats.Applicative
 import cats.effect._
@@ -24,13 +24,15 @@ object Main extends IOApp {
   def run(args: List[String]): IO[ExitCode] =
     stream[IO].compile.drain.as(ExitCode.Success)
 
-  def stream[F[_]: ConcurrentEffect: Applicative: ContextShift: Timer]: Stream[F, ExitCode] = for {
-    configuration <- Stream.eval(config.load[F])
-    httpApp = new Route[F].routes.toRoutes().orNotFound
-    enhanced = Logger.httpApp(logHeaders = true, logBody = true)(httpApp)
-    exitCode <- BlazeServerBuilder[F]
+  def stream[F[_]: ConcurrentEffect: Applicative: ContextShift: Timer]
+      : Stream[F, ExitCode] =
+    for {
+      configuration <- Stream.eval(config.load[F])
+      httpApp = new Route[F].routes.toRoutes().orNotFound
+      enhanced = Logger.httpApp(logHeaders = true, logBody = true)(httpApp)
+      exitCode <- BlazeServerBuilder[F]
         .bindHttp(port = configuration.port, host = "0.0.0.0")
         .withHttpApp(enhanced)
         .serve
-  } yield exitCode
+    } yield exitCode
 }

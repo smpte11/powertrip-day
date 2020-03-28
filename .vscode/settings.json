@@ -3,5 +3,11 @@
     "[default]": "minikube",
     "minikube": "minikube",
     "powertrip-day": "minikube"
+  },
+  "cloudcode.last-used-context": {
+    "Run on Kubernetes": {
+      "kubeConfigPath": "/home/felixb/.kube/config",
+      "contextName": "minikube"
+    }
   }
 }

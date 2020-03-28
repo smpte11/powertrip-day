@@ -1,10 +1,10 @@
 apiVersion: skaffold/v2alpha1
 kind: Config
 metadata:
-  name: powertrip-day
+  name: powertrip-travel
 build:
   artifacts:
-    - image: powertrip-day
+    - image: powertrip-travel
       custom:
         buildCommand: ./scripts/build.sh
         dependencies:
@@ -16,8 +16,8 @@ deploy:
       upgrade:
         - "--install"
     releases:
-      - name: powertrip-day
-        chartPath: powertrip-day
+      - name: powertrip-travel
+        chartPath: powertrip-travel
         values:
-          image: powertrip-day
+          image: powertrip-travel
         imageStrategy: {}

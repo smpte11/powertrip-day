@@ -1,12 +1,12 @@
 {{- if .Values.ingress.enabled -}}
-{{- $serviceName := include "powertrip-day.fullname" . -}}
+{{- $serviceName := include "powertrip-travel.fullname" . -}}
 {{- $servicePort := .Values.service.externalPort -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "powertrip-day.fullname" . }}
+  name: {{ include "powertrip-travel.fullname" . }}
   labels:
-    app: {{ include "powertrip-day.name" . }}
+    app: {{ include "powertrip-travel.name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"

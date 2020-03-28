@@ -1,4 +1,4 @@
-package com.powertrip.day
+package com.powertrip.travel
 
 import java.time.LocalDateTime
 
@@ -13,10 +13,9 @@ class Route[F[_]: Sync] extends Http4sDsl[F] {
   // TODO move `api` and `version` to config
   val api = "api"
   val version = "v1"
-  val resource = "days"
 
   val routes: RhoRoutes[F] = new RhoRoutes[F] {
-    GET / api / version / resource / pathVar[Int] |>> { _: Int =>
+    GET / api / version / "days" / pathVar[Int] |>> { _: Int =>
       val activities = NonEmptyChain(2, 2, 3)
       val day = Day(
         date = LocalDateTime.now(),
