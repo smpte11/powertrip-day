@@ -24,7 +24,12 @@ object AppEnvironment
   val values: immutable.IndexedSeq[AppEnvironment] = findValues
 }
 
-final case class DbConfig(uri: String, password: Secret[DatabasePassword])
+final case class DbConfig(
+    driver: String,
+    url: String,
+    user: String,
+    password: Secret[DatabasePassword]
+)
 final case class ApiConfig(port: UserPortNumber)
 
 final case class Config(api: ApiConfig, database: DbConfig)

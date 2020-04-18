@@ -24,7 +24,12 @@ object Main extends IOApp {
 
   val dbConfig = for {
     password <- env("DB_PASS").as[DatabasePassword].default("test").secret,
-  } yield DbConfig(uri = "http://localhost:5432", password = password)
+  } yield DbConfig(
+    driver = "org.postgresql.Driver",
+    url = "http://localhost:5432",
+    user = "traveller",
+    password = password
+  )
 
   val config: ConfigValue[Config] = (
     apiConfig,
