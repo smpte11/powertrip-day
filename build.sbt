@@ -1,10 +1,11 @@
-val http4sVersion = "0.21.1"
-val rhoVersion = "0.20.0"
 val circeVersion = "0.12.3"
-val scalatestVersion = "3.1.1"
-val logbackVersion = "1.2.3"
 val cirisVersion = "1.0.4"
+val doobieVersion = "0.8.8"
+val http4sVersion = "0.21.1"
+val logbackVersion = "1.2.3"
 val refinedVersion = "0.9.13"
+val rhoVersion = "0.20.0"
+val scalatestVersion = "3.1.1"
 
 lazy val root = (project in file("."))
   .settings(
@@ -13,20 +14,24 @@ lazy val root = (project in file("."))
     organization := "com.powertrip",
     version := "0.0.1-SNAPSHOT",
     libraryDependencies ++= Seq(
+      "ch.qos.logback" % "logback-classic" % logbackVersion,
       "eu.timepit" %% "refined-cats" % refinedVersion,
-      "is.cir" %% "ciris" % cirisVersion,
-      "is.cir" %% "ciris-enumeratum" % cirisVersion,
-      "is.cir" %% "ciris-refined" % cirisVersion,
       "io.circe" %% "circe-core" % circeVersion,
       "io.circe" %% "circe-generic" % circeVersion,
       "io.circe" %% "circe-parser" % circeVersion,
       "io.circe" %% "circe-refined" % circeVersion,
-      "org.http4s" %% "http4s-dsl" % http4sVersion,
-      "org.http4s" %% "http4s-blaze-server" % http4sVersion,
+      "is.cir" %% "ciris-enumeratum" % cirisVersion,
+      "is.cir" %% "ciris-refined" % cirisVersion,
+      "is.cir" %% "ciris" % cirisVersion,
       "org.http4s" %% "http4s-blaze-client" % http4sVersion,
+      "org.http4s" %% "http4s-blaze-server" % http4sVersion,
       "org.http4s" %% "http4s-circe" % http4sVersion,
+      "org.http4s" %% "http4s-dsl" % http4sVersion,
       "org.http4s" %% "rho-core" % rhoVersion,
-      "ch.qos.logback" % "logback-classic" % logbackVersion,
+      "org.tpolecat" %% "doobie-core" % doobieVersion,
+      "org.tpolecat" %% "doobie-hikari" % doobieVersion,
+      "org.tpolecat" %% "doobie-postgres" % doobieVersion,
+      "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
       "org.scalatest" %% "scalatest" % scalatestVersion % Test,
       "org.scalactic" %% "scalactic" % scalatestVersion % Test
     ),
