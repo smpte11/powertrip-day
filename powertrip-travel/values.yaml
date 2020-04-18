@@ -18,3 +18,17 @@ ingress:
     - travel.powertrip
 
 resources: {}
+
+global:
+  postgresql:
+    postgresqlDatabase: travel-db
+    postgresqlUsername: traveller
+    postgresqlPassword: test
+
+postgresql:
+  persistence:
+    storageClass: standard
+    enabled: true
+
+  volumePermissions:
+    enabled: true

@@ -15,7 +15,7 @@ class Route[F[_]: Sync] extends Http4sDsl[F] {
   val version = "v1"
 
   val routes: RhoRoutes[F] = new RhoRoutes[F] {
-    GET / api / version / "days" / pathVar[Int] |>> { _: Int =>
+    GET / api / version / "travels" / pathVar[Int] |>> { _: Int =>
       val activities = NonEmptyChain(2, 2, 3)
       val day = Day(
         date = LocalDateTime.now(),

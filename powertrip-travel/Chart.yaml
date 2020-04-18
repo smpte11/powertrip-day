@@ -3,3 +3,13 @@ appVersion: "1.0"
 description: A Helm chart the travel service
 name: powertrip-travel
 version: 0.1.0
+metadata:
+  type: application
+
+dependencies:
+  - name: postgresql
+    version: 8.7.4
+    repository: "https://charts.bitnami.com/bitnami"
+    tags:
+      - database
+      - persistance
