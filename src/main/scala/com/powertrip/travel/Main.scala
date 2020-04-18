@@ -26,7 +26,7 @@ object Main extends IOApp {
     password <- env("DB_PASS").as[DatabasePassword].default("test").secret,
   } yield DbConfig(
     driver = "org.postgresql.Driver",
-    url = "http://localhost:5432",
+    url = "jdbc:postgresql://powertrip-travel-postgresql/travel-db",
     user = "traveller",
     password = password
   )
