@@ -4,6 +4,7 @@ val circeVersion = "0.12.3"
 val scalatestVersion = "3.1.1"
 val logbackVersion = "1.2.3"
 val cirisVersion = "1.0.4"
+val refinedVersion = "0.9.13"
 
 lazy val root = (project in file("."))
   .settings(
@@ -12,6 +13,7 @@ lazy val root = (project in file("."))
     organization := "com.powertrip",
     version := "0.0.1-SNAPSHOT",
     libraryDependencies ++= Seq(
+      "eu.timepit" %% "refined-cats" % refinedVersion,
       "is.cir" %% "ciris" % cirisVersion,
       "is.cir" %% "ciris-enumeratum" % cirisVersion,
       "is.cir" %% "ciris-refined" % cirisVersion,
