@@ -10,7 +10,7 @@ import cats.effect.ContextShift
 object Database {
   def transactor(
       config: DbConfig,
-      executionCtx: ExecutionContext,
+      executionContext: ExecutionContext,
       blocker: Blocker
   )(implicit contextShift: ContextShift[IO]) = {
     HikariTransactor.newHikariTransactor[IO](
@@ -18,7 +18,7 @@ object Database {
       config.url,
       config.user,
       config.password.value,
-      executionCtx,
+      executionContext,
       blocker
     )
   }

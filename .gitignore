@@ -107,3 +107,6 @@ gradle-app.setting
 .metals
 .bloop
 .vscode
+*.log
+*.local.*
+data

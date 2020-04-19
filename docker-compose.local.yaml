@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  db-master:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=travel_db
+      - POSTGRES_USER=traveller
+    ports:
+      - "5432:5432"

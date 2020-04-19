@@ -13,7 +13,8 @@ case class Day(
 
 case class Travel(
     id: Option[UUID],
-    to: LocalDateTime,
+    name: String,
+    destination: String,
     from: LocalDateTime,
-    days: NonEmptyChain[Int]
+    to: LocalDateTime
 )

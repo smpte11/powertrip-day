@@ -7,5 +7,5 @@ import eu.timepit.refined.collection.MinSize
 
 package object config {
 
-  type DatabasePassword = String Refined MinSize[W.`3`.T]
+  type DatabasePassword = String Refined MinSize[W.`0`.T]
 }
