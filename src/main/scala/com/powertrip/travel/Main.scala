@@ -1,55 +1,79 @@
 package com.powertrip.travel
 
-import cats.Applicative
 import cats.effect._
 import cats.implicits._
 import ciris._
 import ciris.refined._
 import com.powertrip.config._
-import com.powertrip.config.AppEnvironment.Development
+import doobie.hikari.HikariTransactor
+import doobie.util.ExecutionContexts
 import eu.timepit.refined.auto._
 import eu.timepit.refined.cats._
 import eu.timepit.refined.types.net.UserPortNumber
-import eu.timepit.refined.string.Uri
-import fs2.Stream
 import org.http4s.implicits._
+import org.http4s.server.Server
 import org.http4s.server.blaze._
 import org.http4s.server.middleware.Logger
 
 object Main extends IOApp {
 
-  val apiConfig = for {
+  val apiConfig: ConfigValue[ApiConfig] = for {
     port <- env("PORT").as[UserPortNumber].default(8081)
   } yield ApiConfig(port = port)
 
-  val dbConfig = for {
-    password <- env("DB_PASS").as[DatabasePassword].default("test").secret,
+  val dbConfig: ConfigValue[DbConfig] = for {
+    password <- env("DB_PASS").as[DatabasePassword].default("test").secret
+    poolSize <- env("THREAD_POOL_SIZE").as[Int].default(32)
   } yield DbConfig(
     driver = "org.postgresql.Driver",
     url = "jdbc:postgresql://powertrip-travel-postgresql/travel-db",
     user = "traveller",
-    password = password
+    password = password,
+    threadPoolSize = poolSize
   )
 
-  val config: ConfigValue[Config] = (
-    apiConfig,
-    dbConfig
-  ).parMapN { (api, database) =>
-    Config(api = api, database = database)
-  }
+  val config: ConfigValue[Config] =
+    env("ENV").as[AppEnvironment].default(AppEnvironment.Development).flatMap {
+      _ =>
+        (
+          apiConfig,
+          dbConfig
+        ).parMapN { (api, database) =>
+          Config(api = api, database = database)
+        }
+    }
 
-  def run(args: List[String]): IO[ExitCode] =
-    stream[IO].compile.drain.as(ExitCode.Success)
-
-  def stream[F[_]: ConcurrentEffect: Applicative: ContextShift: Timer]
-      : Stream[F, ExitCode] =
+  def transactor[F[_]: Async: ContextShift](
+      conf: DbConfig
+  ): Resource[F, HikariTransactor[F]] =
     for {
-      configuration <- Stream.eval(config.load[F])
+      ce <- ExecutionContexts.fixedThreadPool[F](conf.threadPoolSize)
+      blocker <- Blocker[F]
+      transactor <- HikariTransactor.newHikariTransactor(
+        conf.driver,
+        conf.url,
+        conf.user,
+        conf.password.value,
+        ce,
+        blocker
+      )
+    } yield transactor
+
+  def server[F[_]: ConcurrentEffect: ContextShift: Timer](
+      conf: Config
+  ): Resource[F, Server[F]] =
+    for {
+      xa <- transactor(conf.database)
       httpApp = new Route[F].routes.toRoutes().orNotFound
       enhanced = Logger.httpApp(logHeaders = true, logBody = true)(httpApp)
-      exitCode <- BlazeServerBuilder[F]
-        .bindHttp(port = configuration.api.port, host = "0.0.0.0")
+      server <- BlazeServerBuilder[F]
+        .bindHttp(port = conf.api.port, host = "0.0.0.0")
         .withHttpApp(enhanced)
-        .serve
-    } yield exitCode
+        .resource
+    } yield server
+
+  def run(args: List[String]): IO[ExitCode] =
+    config
+      .load[IO]
+      .flatMap(conf => server[IO](conf).use(_ => IO.never.as(ExitCode.Success)))
 }

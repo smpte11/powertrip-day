@@ -1,6 +1,7 @@
 val circeVersion = "0.12.3"
 val cirisVersion = "1.0.4"
 val doobieVersion = "0.8.8"
+val flywayVersion = "6.3.1"
 val http4sVersion = "0.21.1"
 val logbackVersion = "1.2.3"
 val refinedVersion = "0.9.13"
@@ -15,6 +16,7 @@ lazy val root = (project in file("."))
     version := "0.0.1-SNAPSHOT",
     libraryDependencies ++= Seq(
       "ch.qos.logback" % "logback-classic" % logbackVersion,
+      "org.flywaydb" % "flyway-core" % flywayVersion,
       "eu.timepit" %% "refined-cats" % refinedVersion,
       "io.circe" %% "circe-core" % circeVersion,
       "io.circe" %% "circe-generic" % circeVersion,

@@ -1,13 +1,7 @@
 package com.powertrip.config
 
 import ciris._
-import ciris.refined._
 import enumeratum.{CirisEnum, Enum, EnumEntry}
-import eu.timepit.refined.W
-import eu.timepit.refined.api._
-import eu.timepit.refined.auto._
-import eu.timepit.refined.collection.MinSize
-import eu.timepit.refined.string.Uri
 import eu.timepit.refined.types.net.UserPortNumber
 
 import scala.collection.immutable
@@ -28,7 +22,8 @@ final case class DbConfig(
     driver: String,
     url: String,
     user: String,
-    password: Secret[DatabasePassword]
+    password: Secret[DatabasePassword],
+    threadPoolSize: Int
 )
 final case class ApiConfig(port: UserPortNumber)
 

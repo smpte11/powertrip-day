@@ -28,7 +28,8 @@ class TravelRepositorySpec
     "org.postgresql.Driver",
     "jdbc:postgresql://localhost:5432/test_travel_db",
     "test_traveller",
-    Secret[DatabasePassword]("test")
+    Secret[DatabasePassword]("test"),
+    32
   )
 
   val transactor = Transactor.fromDriverManager[IO](

@@ -1,26 +1,18 @@
 package com.powertrip.config
 
-import cats.effect.Blocker
-import cats.effect.IO
+import cats.effect.Async
 import doobie.hikari.HikariTransactor
-import eu.timepit.refined.auto._
-import scala.concurrent.ExecutionContext
-import cats.effect.ContextShift
+import org.flywaydb.core.Flyway
 
 object Database {
-  def transactor(
-      config: DbConfig,
-      executionContext: ExecutionContext,
-      blocker: Blocker
-  )(implicit contextShift: ContextShift[IO]) = {
-    HikariTransactor.newHikariTransactor[IO](
-      config.driver,
-      config.url,
-      config.user,
-      config.password.value,
-      executionContext,
-      blocker
-    )
+  def init[F[_]: Async](transactor: HikariTransactor[F]): F[Unit] = {
+    val F = implicitly[Async[F]]
+    transactor.configure { dataSource =>
+      F.pure {
+        val flyway = Flyway.configure.dataSource(dataSource).load
+        flyway.migrate
+        ()
+      }
+    }
   }
-
 }
