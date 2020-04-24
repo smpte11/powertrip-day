@@ -26,7 +26,7 @@ object Main extends IOApp {
     poolSize <- env("THREAD_POOL_SIZE").as[Int].default(32)
   } yield DbConfig(
     driver = "org.postgresql.Driver",
-    url = "jdbc:postgresql://powertrip-travel-postgresql/travel-db",
+    url = "jdbc:postgresql://powertrip-travel-database/travel_db",
     user = "traveller",
     password = password,
     threadPoolSize = poolSize
@@ -43,37 +43,34 @@ object Main extends IOApp {
         }
     }
 
-  def transactor[F[_]: Async: ContextShift](
-      conf: DbConfig
-  ): Resource[F, HikariTransactor[F]] =
+  def resources[F[_]: ConcurrentEffect: ContextShift](
+      conf: Config
+  ): Resource[F, (Config, HikariTransactor[F])] =
     for {
-      ce <- ExecutionContexts.fixedThreadPool[F](conf.threadPoolSize)
-      blocker <- Blocker[F]
-      transactor <- HikariTransactor.newHikariTransactor(
-        conf.driver,
-        conf.url,
-        conf.user,
-        conf.password.value,
-        ce,
-        blocker
-      )
-    } yield transactor
+      xa <- Database.transactor(conf.database)
+    } yield (conf, xa)
 
   def server[F[_]: ConcurrentEffect: ContextShift: Timer](
-      conf: Config
-  ): Resource[F, Server[F]] =
+      resources: (Config, HikariTransactor[F])
+  ): F[ExitCode] = {
+    val (conf, xa) = resources
     for {
-      xa <- transactor(conf.database)
+      _ <- Database.init(xa)
       httpApp = new Route[F].routes.toRoutes().orNotFound
       enhanced = Logger.httpApp(logHeaders = true, logBody = true)(httpApp)
-      server <- BlazeServerBuilder[F]
+      exitCode <- BlazeServerBuilder[F]
         .bindHttp(port = conf.api.port, host = "0.0.0.0")
         .withHttpApp(enhanced)
-        .resource
-    } yield server
+        .serve
+        .compile
+        .lastOrError
+    } yield exitCode
+  }
 
   def run(args: List[String]): IO[ExitCode] =
     config
       .load[IO]
-      .flatMap(conf => server[IO](conf).use(_ => IO.never.as(ExitCode.Success)))
+      .flatMap { conf =>
+        resources[IO](conf).use(server[IO])
+      }
 }

@@ -2,6 +2,11 @@ kind: Service
 apiVersion: v1
 metadata:
   name: {{ template "powertrip-travel.fullname" . }}-database
+  labels:
+    app: {{ template "powertrip-travel.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   type: ClusterIP
   ports:
@@ -14,6 +19,6 @@ metadata:
   name: {{ template "powertrip-travel.fullname" . }}-database
 subsets:
   - addresses:
-      - ip: 192.168.77.1
+      - ip: 10.0.2.2
     ports:
       - port: 5432

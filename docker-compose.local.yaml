@@ -2,9 +2,7 @@ version: "3.8"
 
 services:
   db-master:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: postgres
     restart: always
     environment:
       - POSTGRES_PASSWORD=test
@@ -12,3 +10,5 @@ services:
       - POSTGRES_USER=traveller
     ports:
       - "5432:5432"
+    volumes:
+      - ./docker-entrypoint-initdb.d/init.sh:/docker-entrypoint-initdb.d/init.sh
