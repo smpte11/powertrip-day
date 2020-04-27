@@ -10,6 +10,9 @@ service:
   externalPort: 8081
   name: powertrip-travel
 
+db:
+  ip: 10.0.2.2
+
 ingress:
   enabled: true
   annotations:
@@ -18,17 +21,3 @@ ingress:
     - travel.powertrip
 
 resources: {}
-
-global:
-  postgresql:
-    postgresqlDatabase: travel-db
-    postgresqlUsername: traveller
-    postgresqlPassword: test
-
-postgresql:
-  persistence:
-    storageClass: standard
-    enabled: true
-
-  volumePermissions:
-    enabled: true

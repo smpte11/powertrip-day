@@ -28,6 +28,12 @@ package object travel {
   implicit def dayEntityEncoder[F[_]: Applicative]: EntityEncoder[F, Day] =
     jsonEncoderOf[F, Day]
 
+  implicit val travelEncoder: Encoder[Travel] = deriveEncoder[Travel]
+  implicit val travelDecoder: Decoder[Travel] = deriveDecoder[Travel]
+  implicit def travelEntityEncoder[F[_]: Applicative]
+      : EntityEncoder[F, Travel] =
+    jsonEncoderOf[F, Travel]
+
   // Errors
   case object TravelNotFoundError
 }

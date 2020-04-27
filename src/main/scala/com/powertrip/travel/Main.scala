@@ -56,7 +56,7 @@ object Main extends IOApp {
     val (conf, xa) = resources
     for {
       _ <- Database.init(xa)
-      httpApp = new Route[F].routes.toRoutes().orNotFound
+      httpApp = new Route[F].app.orNotFound
       enhanced = Logger.httpApp(logHeaders = true, logBody = true)(httpApp)
       exitCode <- BlazeServerBuilder[F]
         .bindHttp(port = conf.api.port, host = "0.0.0.0")
@@ -70,7 +70,5 @@ object Main extends IOApp {
   def run(args: List[String]): IO[ExitCode] =
     config
       .load[IO]
-      .flatMap { conf =>
-        resources[IO](conf).use(server[IO])
-      }
+      .flatMap(resources[IO](_).use(server[IO]))
 }
