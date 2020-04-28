@@ -13,9 +13,14 @@ import cats.effect.IO
 import java.time.LocalDateTime
 
 object Queries {
+  private val BaseSelect =
+    fr"select id, name, destination, start_at, end_at from travel"
+
   val allTravels =
-    sql"select id, name, destination, start, 'end' from travel"
+    BaseSelect
       .query[Travel]
+
+  def byId(id: ju.UUID) = (BaseSelect ++ fr"where id = $id").query[Travel]
 
   def insertTravel(
       name: String,

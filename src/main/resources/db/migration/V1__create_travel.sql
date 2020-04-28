@@ -1,7 +1,7 @@
 create table if not exists travel (
   id uuid,
-  name varchar,
-  destination varchar,
-  start_at timestamp,
-  end_at timestamp
+  name varchar not null,
+  destination varchar not null,
+  start_at timestamp not null,
+  end_at timestamp not null
 )

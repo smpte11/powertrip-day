@@ -56,7 +56,7 @@ object Main extends IOApp {
     val (conf, xa) = resources
     for {
       _ <- Database.init(xa)
-      httpApp = new Route[F].app.orNotFound
+      httpApp = new Route[F](new Repository[F](xa)).app.orNotFound
       enhanced = Logger.httpApp(logHeaders = true, logBody = true)(httpApp)
       exitCode <- BlazeServerBuilder[F]
         .bindHttp(port = conf.api.port, host = "0.0.0.0")
