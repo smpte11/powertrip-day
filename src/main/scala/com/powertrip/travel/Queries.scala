@@ -9,25 +9,25 @@ import doobie.postgres._
 import doobie.postgres.implicits._
 import doobie.implicits.javatime._
 import java.{util => ju}
-import cats.effect.IO
-import java.time.LocalDateTime
+
+import java.time.OffsetDateTime
 
 object Queries {
   private val BaseSelect =
     fr"select id, name, destination, start_at, end_at from travel"
 
-  val allTravels =
+  val allTravels: doobie.Query0[Travel] =
     BaseSelect
       .query[Travel]
 
-  def byId(id: ju.UUID) = (BaseSelect ++ fr"where id = $id").query[Travel]
+  def byId(id: ju.UUID): doobie.Query0[Travel] = (BaseSelect ++ fr"where id = $id").query[Travel]
 
   def insertTravel(
       name: String,
       destination: String,
-      startAt: LocalDateTime,
-      endAt: LocalDateTime
-  ) = sql"""insert into travel (
+      startAt: OffsetDateTime,
+      endAt: OffsetDateTime
+  ): doobie.Update0 = sql"""insert into travel (
     name,
     destination,
     start_at,

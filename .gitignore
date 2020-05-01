@@ -110,3 +110,5 @@ gradle-app.setting
 *.log
 *.local.*
 data
+!/.env
+.env

@@ -1,31 +1,34 @@
 package com.powertrip.travel
 
-import cats.effect._
+import java.time.OffsetDateTime
+import java.{util => ju}
+
+import cats._
+import cats.data._
 import cats.implicits._
-import ciris.refined._
+import cats.effect._
 import ciris.Secret
 import com.powertrip.config._
 import doobie._
 import doobie.implicits._
-import doobie.postgres.implicits._
 import doobie.implicits.javatime._
+import doobie.postgres._
+import doobie.postgres.implicits._
 import doobie.scalatest.IOChecker
 import doobie.util.ExecutionContexts
 import doobie.util.transactor.Transactor
 import eu.timepit.refined.auto._
 import eu.timepit.refined.cats._
+import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.{AnyFlatSpec => FlatSpec}
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.BeforeAndAfterAll
-import java.time.LocalDateTime
-import java.{util => ju}
 
 class TravelRepositorySpec
     extends FlatSpec
     with Matchers
     with IOChecker
     with BeforeAndAfterAll {
-  implicit val cs = IO.contextShift(ExecutionContexts.synchronous)
+  implicit val cs: ContextShift[IO] = IO.contextShift(ExecutionContexts.synchronous)
 
   val config: DbConfig = DbConfig(
     "org.postgresql.Driver",
@@ -35,7 +38,7 @@ class TravelRepositorySpec
     32
   )
 
-  val transactor = Transactor.fromDriverManager[IO](
+  val transactor: doobie.Transactor[IO] = Transactor.fromDriverManager[IO](
     config.driver,
     config.url,
     config.user,
@@ -43,15 +46,15 @@ class TravelRepositorySpec
   )
 
   val id: ju.UUID = ju.UUID.randomUUID()
-  val drop = sql"""drop table if exists travel""".update.run
-  val create = sql"""create table travel (
+  val drop: doobie.ConnectionIO[Int] = sql"""drop table if exists travel""".update.run
+  val create: doobie.ConnectionIO[Int] = sql"""create table travel (
     id uuid,
     name varchar not null,
     destination varchar not null,
     start_at timestamp not null,
     end_at timestamp not null
   )""".update.run
-  val seed = sql"""insert into travel (
+  val seed: doobie.ConnectionIO[Int] = sql"""insert into travel (
     id,
     name,
     destination,
@@ -61,8 +64,8 @@ class TravelRepositorySpec
     $id,
     'test',
     'test',
-    ${LocalDateTime.now},
-    ${LocalDateTime.now}
+    ${OffsetDateTime.now},
+    ${OffsetDateTime.now}
   )""".update.run
 
   override def beforeAll(): Unit = {
@@ -75,7 +78,7 @@ class TravelRepositorySpec
 
   "Travel repository" should "insert a new travel" in {
     check(
-      Queries.insertTravel("test", "test", LocalDateTime.now, LocalDateTime.now)
+      Queries.insertTravel("test", "test", OffsetDateTime.now, OffsetDateTime.now)
     )
   }
 

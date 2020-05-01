@@ -22,11 +22,12 @@ object Main extends IOApp {
   } yield ApiConfig(port = port)
 
   val dbConfig: ConfigValue[DbConfig] = for {
+    host <- env("DB_HOST").as[String].default("powertrip-travel-database")
     password <- env("DB_PASS").as[DatabasePassword].default("test").secret
     poolSize <- env("THREAD_POOL_SIZE").as[Int].default(32)
   } yield DbConfig(
     driver = "org.postgresql.Driver",
-    url = "jdbc:postgresql://powertrip-travel-database/travel_db",
+    url = s"jdbc:postgresql://$host/travel_db",
     user = "traveller",
     password = password,
     threadPoolSize = poolSize
@@ -50,7 +51,7 @@ object Main extends IOApp {
       xa <- Database.transactor(conf.database)
     } yield (conf, xa)
 
-  def server[F[_]: ConcurrentEffect: ContextShift: Timer](
+  def server[F[_]: ConcurrentEffect: ContextShift: Timer: Sync](
       resources: (Config, HikariTransactor[F])
   ): F[ExitCode] = {
     val (conf, xa) = resources
